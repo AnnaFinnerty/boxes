@@ -1,0 +1,100 @@
+body{
+    margin: 0;
+    padding: 0;
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;
+}
+
+header{
+    background: grey;
+    width: 100vw;
+    height: 10vh;
+    position: fixed;
+    top: 0;
+}
+
+main{
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+footer{
+    text-align: right;
+    width: 100vw;
+    position: fixed;
+    bottom: 0;
+}
+
+#game-container{
+    margin: 0 auto;
+}
+
+#message{
+    width: 100vw;
+    text-align: center;
+    position: fixed;
+    bottom: 10vh;
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.square{
+    width: 10vh;
+    height: 10vh;
+    border: .5vh solid white;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.square-row{
+    margin-left: 1vh;
+}
+
+.dot{
+    width: 2vh;
+    height: 2vh;
+    background: black;
+    border-radius: 100%;
+}
+
+.dash{
+    background: white;
+}
+
+.selected{
+    background: black;
+    pointer-events: none;
+}
+
+.dash:hover{
+    background: turquoise;
+}
+
+.horizontal-dash{
+    width: 10vh;
+    height: 1vh;
+    border-top: .5vh solid white;
+    border-bottom: .5vh solid white;
+}
+
+.vertical-dash{
+    width: 1vh;
+    height: 10vh;
+    border-right: .5vh solid white;
+    border-left: .5vh solid white;
+}
+
+.fill{
+    width: 10vh;
+    height: 10vh;
+}
+
+

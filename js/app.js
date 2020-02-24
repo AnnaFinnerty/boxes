@@ -80,13 +80,15 @@ class Game{
                     dash.addEventListener('click',this.selectLine);
                     // dash.innerHTML=j+","+i;
                     row.appendChild(dash);
-                    const fill = document.createElement('div');
-                    fill.className = 'fill';
-                    const fillId = (j+"_"+(i-1)/2);
-                    fill.id = fillId;
-                    // fill.innerHTML = fillId;
-                    this.fills[fillId] = fill;
-                    row.appendChild(fill);
+                    if(j<this.piecesAcross){
+                        const fill = document.createElement('div');
+                        fill.className = 'fill';
+                        const fillId = (j+"_"+(i-1)/2);
+                        fill.id = fillId;
+                        // fill.innerHTML = fillId;
+                        this.fills[fillId] = fill;
+                        row.appendChild(fill);
+                    }
                 }
             }
             this.container.appendChild(row);

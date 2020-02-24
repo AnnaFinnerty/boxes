@@ -1,7 +1,7 @@
 class Game{
     constructor(){
-        this.playerOneColor = "red";
-        this.playerTwoColor = "blue";
+        this.playerOneColor = "lightgray";
+        this.playerTwoColor = "dimgray";
         this.playerOneScore = 0;
         this.playerTwoScore = 0;
         this.playerOneMoves = 0;
@@ -13,6 +13,10 @@ class Game{
         this.piecesAcross = 4;
         this.container = document.querySelector('#game-container');
         this.message = document.querySelector('#message');
+        this.playerOneScoreContainer = document.querySelector('#player-one-score');
+        this.playerOneMovesContainer = document.querySelector('#player-one-moves');
+        this.playerTwoScoreContainer = document.querySelector('#player-two-score');
+        this.playerTwoMovesContainer = document.querySelector('#player-two-moves');
         this.fills = {};
         this.new();
     }
@@ -83,6 +87,11 @@ class Game{
         }
     }
     selectLine = (e) => {
+        if(this.playerOneGoesNext){
+            this.playerOneMoves++
+        } else {
+            this.playerTwoMoves++
+        }
         const x = e.target.getAttribute('data-x');
         const y = e.target.getAttribute('data-y');
         console.log('selecting line ' + x + "," + y );
@@ -94,9 +103,7 @@ class Game{
     checkForSquare = (x,y) => {
         console.log('checking for square');
         let squareFound = false;
-        if(true){
-            //determine line orientation by row number
-            
+        if(this.selectedLines.length > 3){         
             const pieces = Object.keys(this.pieces);
             const squaresFound = pieces.filter((piece)=> this.pieces[piece]['edges'].includes(x+","+y) && !this.pieces[piece]['won'])
             console.log(squaresFound)
@@ -119,22 +126,31 @@ class Game{
                         if(!this.pieces[squaresFound[i]]['won']){
                             this.pieces[squaresFound[i]]['won'] = this.playerOneGoesNext ? "PlayerTwo":"PlayerOne";
                             this.fills[squaresFound[i]].style.background = this.playerOneGoesNext ? this.playerTwoColor: this.playerOneColor;
+                            if(this.playerOneGoesNext){
+                                this.playerTwoScore++
+                            } else {
+                                this.playerOneScore++
+                            }
                             squareFound = true;
                         }
                     } 
                 }
             } 
         }
+        this.updateScore();
         if(!squareFound){
             this.nextTurn();
-        }
+        } 
     }
     nextTurn = () => {
         this.playerOneGoesNext = !this.playerOneGoesNext;
         this.message.innerHTML = this.playerOneGoesNext ? "Player One's Turn" : "Player Two's Turn";
     }
     updateScore = () => {
-
+        this.playerOneScoreContainer.innerHTML = 'Score: ' + this.playerOneScore;
+        this.playerOneMovesContainer.innerHTML = 'Moves: ' + this.playerOneMoves;
+        this.playerTwoScoreContainer.innerHTML = 'Score: ' + this.playerTwoScore;
+        this.playerTwoMovesContainer.innerHTML = 'Moves: ' + this.playerTwoMoves;
     }
 }
 

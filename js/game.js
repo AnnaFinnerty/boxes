@@ -12,6 +12,7 @@ class Game{
         this.playerOneGoesNext = true;
         this.unclaimedSquares = null;
         this.pieces = {};
+        this.lines = {};
         this.selectedLines = [];
         this.piecesAcross = 4;
         this.container = document.querySelector('#game-container');
@@ -28,8 +29,8 @@ class Game{
     }
     new = (isPlayerOneHuman,isPlayerTwoHuman,isRandom) => {
         console.log('new game')
-        this.playerOne = isPlayerOneHuman ? null : new ai();
-        this.playerTwo = isPlayerTwoHuman ? null : new ai();
+        this.playerOne = isPlayerOneHuman ? null : new ai("Player One");
+        this.playerTwo = isPlayerTwoHuman ? null : new ai("Player Two");
         this.unclaimedSquares = this.piecesAcross * this.piecesAcross;
         this.message.innerHTML = "Player One's Turn";
         this.currentPlayerColorBlock.style.background = this.playerOneColor;
@@ -119,14 +120,9 @@ class Game{
         let squareFound = false;
         if(this.selectedLines.length > 3){         
             const pieces = Object.keys(this.pieces);
-            const squaresFound = pieces.filter((piece)=> this.pieces[piece]['edges'].includes(x+","+y) && !this.pieces[piece]['won'])
-            console.log(squaresFound)
-            
+            const squaresFound = pieces.filter((piece)=> this.pieces[piece]['edges'].includes(x+","+y) && !this.pieces[piece]['won'])          
             if(squaresFound.length){
                 for(let i = 0; i < squaresFound.length; i++){
-                    // console.log(squaresFound[i])
-                    // console.log(this.selectedLines)
-                    // console.log(this.pieces[squaresFound[i]]['edges']);
                     let matches = 0;
                     for(let j = 0; j< this.pieces[squaresFound[i]]['edges'].length; j++){
                         matches = testSquare(this.selectedLines,this.pieces[squaresFound[i]]);
@@ -161,9 +157,12 @@ class Game{
     }
     nextTurn = () => {
         this.playerOneGoesNext = !this.playerOneGoesNext;
-        // if(this.playerOneGoesNext && !this.isPlayerOneHuman){
-
-        // }
+        if(this.playerOneGoesNext && !this.isPlayerOneHuman){
+            this.playerOne.play(this.pieces,this.selectedLines);
+        }
+        if(!this.playerOneGoesNext && !this.isPlayerTwoHuman){
+            this.playerTwo.play(this.pieces,this.selectedLines);
+        }
         this.currentPlayerColorBlock.style.background = this.playerOneGoesNext ? this.playerOneColor : this.playerTwoColor;
         this.message.innerHTML = this.playerOneGoesNext ? "Player One's Turn" : "Player Two's Turn";
     }

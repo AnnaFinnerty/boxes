@@ -17,13 +17,19 @@ class Game{
         this.playerOneMovesContainer = document.querySelector('#player-one-moves');
         this.playerTwoScoreContainer = document.querySelector('#player-two-score');
         this.playerTwoMovesContainer = document.querySelector('#player-two-moves');
+        this.currentPlayerColorBlock = document.querySelector('#current-player-color-block');
+        this.playerOneColorBlock = document.querySelector('#player-one-color-block');
+        this.playerTwoColorBlock = document.querySelector('#player-two-color-block');
         this.fills = {};
         this.new();
     }
     new = () => {
         console.log('new game')
         this.unclaimedSquares = this.piecesAcross * this.piecesAcross;
-        this.message.innerHTML = "Player One's Turn"
+        this.message.innerHTML = "Player One's Turn";
+        this.currentPlayerColorBlock.style.background = this.playerOneColor;
+        this.playerOneColorBlock.style.background = this.playerOneColor;
+        this.playerTwoColorBlock.style.background = this.playerTwoColor;
         //build game pieces
         const pieces = {}
         for(let i = 0; i < this.piecesAcross; i++){

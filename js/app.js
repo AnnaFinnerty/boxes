@@ -4,7 +4,10 @@ class Game{
         this.playerTwoColor = "blue";
         this.playerOneScore = 0;
         this.playerTwoScore = 0;
+        this.playerOneMoves = 0;
+        this.playerTwoMoves = 0;
         this.playerOneGoesNext = true;
+        this.unclaimedSquares = null;
         this.pieces = {};
         this.selectedLines = [];
         this.piecesAcross = 4;
@@ -15,6 +18,7 @@ class Game{
     }
     new = () => {
         console.log('new game')
+        this.unclaimedSquares = this.piecesAcross * this.piecesAcross;
         this.message.innerHTML = "Player One's Turn"
         //build game pieces
         const pieces = {}
@@ -26,9 +30,9 @@ class Game{
                 pieces[name]['won'] = false;
                 pieces[name]['edges'] = [];
                 pieces[name]['edges'].push(i+","+(j*2));//top side
-                pieces[name]['edges'].push((j)+","+(i%2===0?i+(i+1): i+2));//left
-                pieces[name]['edges'].push((j+1)+","+(i%2===0?i+(i+1): i+2));//right
-                pieces[name]['edges'].push(i+","+(j%2===0?j+2:j+3));//bottom side
+                pieces[name]['edges'].push((i+1)+","+((j*2)+1));//right
+                pieces[name]['edges'].push(i+","+((j*2)+2));//bottom side
+                pieces[name]['edges'].push((i+","+(j*2+1)));//left
             }
         }
         console.log(pieces);
@@ -52,6 +56,7 @@ class Game{
                         dash.setAttribute('data-x',j);
                         dash.setAttribute('data-y',i);
                         dash.addEventListener('click',this.selectLine);
+                        // dash.innerHTML=j+","+i;
                         row.appendChild(dash);
                     }
                 }
@@ -63,11 +68,13 @@ class Game{
                     dash.setAttribute('data-x',j);
                     dash.setAttribute('data-y',i);
                     dash.addEventListener('click',this.selectLine);
+                    // dash.innerHTML=j+","+i;
                     row.appendChild(dash);
                     const fill = document.createElement('div');
                     fill.className = 'fill';
-                    const fillId = ((i-1)/2)+"_"+j;
+                    const fillId = (j+"_"+(i-1)/2);
                     fill.id = fillId;
+                    // fill.innerHTML = fillId;
                     this.fills[fillId] = fill;
                     row.appendChild(fill);
                 }
@@ -93,12 +100,14 @@ class Game{
             const pieces = Object.keys(this.pieces);
             const squaresFound = pieces.filter((piece)=> this.pieces[piece]['edges'].includes(x+","+y) && !this.pieces[piece]['won'])
             console.log(squaresFound)
+            
             if(squaresFound.length){
                 for(let i = 0; i < squaresFound.length; i++){
-                    console.log(this.selectedLines);
+                    console.log(squaresFound[i])
+                    console.log(this.selectedLines)
+                    console.log(this.pieces[squaresFound[i]]['edges']);
                     let matches = 0;
                     for(let j = 0; j< this.pieces[squaresFound[i]]['edges'].length; j++){
-                        console.log('piee found: ' + this.pieces[squaresFound[i]]['edges'][j]);
                         if(this.selectedLines.includes(this.pieces[squaresFound[i]]['edges'][j])){
                             matches++;
                             console.log(matches);
@@ -123,6 +132,9 @@ class Game{
     nextTurn = () => {
         this.playerOneGoesNext = !this.playerOneGoesNext;
         this.message.innerHTML = this.playerOneGoesNext ? "Player One's Turn" : "Player Two's Turn";
+    }
+    updateScore = () => {
+
     }
 }
 

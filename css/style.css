@@ -5,6 +5,7 @@ body{
     height: 100vh;
     overflow: hidden;
     background: rgb(240,240,240);
+    font-family: sans-serif;
 }
 
 header{
@@ -33,6 +34,12 @@ footer{
 
 h1,h2,a{
     font-family: 'Aldrich', sans-serif;
+}
+
+h1{
+    margin: 0 20vw 0 2vw;
+    font-size: 8vh;
+    line-height: 10vh;
 }
 
 .player-score{
@@ -69,18 +76,6 @@ h1,h2,a{
     height: 4vh;
     border: .2px solid black;
     margin: auto .5vw;
-}
-
-.row{
-    display: flex;
-    flex-direction: row;
-    flex-wrap: nowrap;
-}
-
-.column{
-    display: flex;
-    flex-direction: column;
-    flex-wrap: nowrap;
 }
 
 .square{
@@ -133,6 +128,24 @@ h1,h2,a{
 .fill{
     width: 10vh;
     height: 10vh;
+}
+
+.modal-window{
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0,0,0,.9);
+}
+
+.row{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.column{
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
 }
 
 

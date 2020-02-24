@@ -12,6 +12,7 @@ header{
     height: 10vh;
     position: fixed;
     top: 0;
+    display: flex;
 }
 
 main{
@@ -28,20 +29,51 @@ footer{
     bottom: 0;
 }
 
+.player-score{
+    display: flex;
+    border: .5px solid white;
+    margin: 1vh;
+    padding: .5vh;
+    width: 20vw;
+    justify-content: space-evenly;
+}
+
 #game-container{
     margin: 0 auto;
 }
 
-#message{
+#message-container{
     width: 100vw;
-    text-align: center;
+    display: flex;
+    justify-content: center;
     position: fixed;
-    bottom: 10vh;
+    top: 14vh;
+}
+
+#message{
+    border: .75px solid dimgray;
+    padding: 2vh;
+    width: 20vw;
+    display: flex;
+    justify-content: center;
+}
+
+.color-block{
+    width: 4vh;
+    height: 4vh;
+    border: .2px solid black;
+    margin: auto .5vw;
 }
 
 .row{
     display: flex;
     flex-direction: row;
+    flex-wrap: nowrap;
+}
+
+.column{
+    display: flex;
+    flex-direction: column;
     flex-wrap: nowrap;
 }
 

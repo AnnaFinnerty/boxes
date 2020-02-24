@@ -12,7 +12,7 @@ class Game{
         this.selectedLines = [];
         this.piecesAcross = 4;
         this.container = document.querySelector('#game-container');
-        this.message = document.querySelector('#message');
+        this.message = document.querySelector('#message-text');
         this.playerOneScoreContainer = document.querySelector('#player-one-score');
         this.playerOneMovesContainer = document.querySelector('#player-one-moves');
         this.playerTwoScoreContainer = document.querySelector('#player-two-score');

@@ -39,7 +39,7 @@ class Game{
         for(let i = 0; i < this.piecesAcross; i++){
             for(let j = 0; j < this.piecesAcross; j++){
                 //create virtual "pieces" and 
-                const name = i+"_"+j;
+                const name = i+","+j;
                 pieces[name] = {};
                 pieces[name]['won'] = false;
                 pieces[name]['sides'] = 0;
@@ -76,7 +76,7 @@ class Game{
                         dash.addEventListener('click',this.clickLine);
                         // dash.innerHTML=j+","+i;
                         row.appendChild(dash);
-                        this.lines[j+"_"+i] = dash;
+                        this.lines[j+","+i] = dash;
                     }
                 }
             } else {
@@ -89,11 +89,11 @@ class Game{
                     dash.addEventListener('click',this.clickLine);
                     // dash.innerHTML=j+","+i;
                     row.appendChild(dash);
-                    this.lines[j+"_"+i] = dash;
+                    this.lines[j+","+i] = dash;
                     if(j<this.piecesAcross){
                         const fill = document.createElement('div');
                         fill.className = 'fill';
-                        const fillId = (j+"_"+(i-1)/2);
+                        const fillId = (j+","+(i-1)/2);
                         fill.id = fillId;
                         // fill.innerHTML = fillId;
                         this.fills[fillId] = fill;
@@ -102,6 +102,9 @@ class Game{
                 }
             }
             this.container.appendChild(row);
+        }
+        if(!this.isPlayerOneHuman){
+            this.selectAI();
         }
     }
     clickLine = (e) => {
@@ -134,17 +137,9 @@ class Game{
                         matches = testSquare(this.selectedLines,this.pieces[squaresFound[i]]);
                     }
                     if(matches ===this.pieces[squaresFound[i]]['edges'].length){
-                        console.log('its a whole square')
+                        console.log('its a whole square', squaresFound[i])
                         if(!this.pieces[squaresFound[i]]['won']){
-                            this.pieces[squaresFound[i]]['won'] = !this.playerOneGoesNext ? "PlayerTwo":"PlayerOne";
-                            this.fills[squaresFound[i]].style.background = !this.playerOneGoesNext ? this.playerTwoColor: this.playerOneColor;
-                            if(!this.playerOneGoesNext){
-                                this.playerTwoScore++
-                            } else {
-                                this.playerOneScore++
-                            }
-                            this.unclaimedSquares--;
-                            console.log('remaining squares',this.unclaimedSquares)
+                            this.fillSquare(squaresFound[i])
                             squareFound = true;
                         }
                     } 
@@ -161,6 +156,18 @@ class Game{
             } 
         }
     }
+    fillSquare = (squareId) => {
+        console.log('filling square ', squareId)
+        this.pieces[squareId]['won'] = !this.playerOneGoesNext ? "PlayerTwo":"PlayerOne";
+        this.fills[squareId].style.background = !this.playerOneGoesNext ? this.playerTwoColor: this.playerOneColor;
+        if(!this.playerOneGoesNext){
+            this.playerTwoScore++
+        } else {
+            this.playerOneScore++
+        }
+        this.unclaimedSquares--;
+        console.log('remaining squares',this.unclaimedSquares)
+    }
     nextTurn = () => {
         this.playerOneGoesNext = !this.playerOneGoesNext;
         if(this.playerOneGoesNext && !this.isPlayerOneHuman){
@@ -175,13 +182,13 @@ class Game{
     selectAI = () => {
         let move = null
         if(this.playerOneGoesNext){
-            move = this.playerOne.playRandom(this.pieces,this.selectedLines);
+            move = this.playerOne.playRandom(this.selectedLines);
         } else {
-            move = this.playerTwo.playRandom(this.pieces,this.selectedLines);
+            move = this.playerTwo.playRandom(this.selectedLines);
         }
         const target = this.lines[move];
-        const x = move.split("_")[0];
-        const y =  move.split("_")[1];
+        const x = move.split(",")[0];
+        const y =  move.split(",")[1];
         console.log('lines',this.lines)
         console.log('move',move )
         console.log('target',target)

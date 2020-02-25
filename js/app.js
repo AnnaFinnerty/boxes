@@ -7,9 +7,15 @@ class App{
         this.playerTwoColor = "dodgerblue";
         this.playerOneGamesWon = 0;
         this.playerTwoGamesWon= 0;
+
+        this.modal = null;
+
         this.playerOneGamesontainer = document.querySelector('#player-one-games');
         this.playerTwoGamesontainer = document.querySelector('#player-two-games');
-        this.newGame()
+        this.modalWindow = document.querySelector('#modal-window');
+
+        this.newGame();
+        this.openModal('message','test message')
     }
     gameWon = (isPlayerOneVictortious) => {
         console.log("game over!");
@@ -27,6 +33,16 @@ class App{
     }
     newGame = () => {
         this.game = new Game(this.playerOneColor,this.playerTwoColor, this.gameWon, this.isPlayerOneHuman, this.isPlayerTwoHuman,this.isRandom);
+    }
+    openModal = (type,text) => {
+        console.log('opening modal');
+        this.modalWindow.className = "modal-window";
+        this.modal = new Modal(this.modalWindow, this.closeModal,type,text)
+    }
+    closeModal = () => {
+        this.modal = null;
+        this.modalWindow.className = "hidden";
+        this.modalWindow.removeChild(this.modalWindow.firstChild)
     }
 }
 

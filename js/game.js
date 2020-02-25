@@ -36,6 +36,7 @@ class Game{
         this.playerTwoColorBlock.style.background = this.playerTwoColor;
         //build game pieces
         const pieces = {}
+        const allEdges = [];
         for(let i = 0; i < this.piecesAcross; i++){
             for(let j = 0; j < this.piecesAcross; j++){
                 //create virtual "pieces" and 
@@ -48,11 +49,14 @@ class Game{
                 pieces[name]['edges'].push((i+1)+","+((j*2)+1));//right
                 pieces[name]['edges'].push(i+","+((j*2)+2));//bottom side
                 pieces[name]['edges'].push((i+","+(j*2+1)));//left
+                allEdges.push(i+","+(j*2));//top side
+                allEdges.push((i+1)+","+((j*2)+1));//right
+                allEdges.push(i+","+((j*2)+2));//bottom side
+                allEdges.push((i+","+(j*2+1)));//left
             }
         }
-        const allPieces = Object.keys(pieces);
-        this.playerOne = isPlayerOneHuman ? null : new AI("Player One",allPieces);
-        this.playerTwo = isPlayerTwoHuman ? null : new AI("Player Two",allPieces);
+        this.playerOne = isPlayerOneHuman ? null : new AI("Player One",allEdges);
+        this.playerTwo = isPlayerTwoHuman ? null : new AI("Player Two",allEdges);
         console.log(pieces);
         this.pieces = pieces;
         this.buildBoard();
@@ -152,8 +156,13 @@ class Game{
         } else {
             if(this.unclaimedSquares <= 0){
                 this.message.innerHTML = "GAME OVER"
-                this.gameOver();            
-            } 
+                this.gameOver();           
+            } else {
+                const AICheck = this.checkForAI();
+                            if(AICheck){
+                                this.selectAI();
+                            }
+            }
         }
     }
     fillSquare = (squareId) => {
@@ -166,14 +175,12 @@ class Game{
             this.playerOneScore++
         }
         this.unclaimedSquares--;
-        console.log('remaining squares',this.unclaimedSquares)
+        console.log('remaining squares',this.unclaimedSquares);
     }
     nextTurn = () => {
         this.playerOneGoesNext = !this.playerOneGoesNext;
-        if(this.playerOneGoesNext && !this.isPlayerOneHuman){
-            this.selectAI();
-        }
-        if(!this.playerOneGoesNext && !this.isPlayerTwoHuman){
+        const AICheck = this.checkForAI();
+        if(AICheck){
             this.selectAI();
         }
         this.currentPlayerColorBlock.style.background = this.playerOneGoesNext ? this.playerOneColor : this.playerTwoColor;
@@ -193,6 +200,15 @@ class Game{
         console.log('move',move )
         console.log('target',target)
         this.selectLine(x,y,target);
+    }
+    checkForAI = () => {
+        if(!this.playerOneGoesNext && !this.isPlayerTwoHuman){
+            return true
+        }
+        if(this.playerOneGoesNext && !this.isPlayerOneHuman){
+            return true
+        }
+        return false
     }
     gameOver = () => {
         this.gameWon(this.playerOneGoesNext);

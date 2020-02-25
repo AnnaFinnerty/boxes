@@ -1,6 +1,7 @@
 function AI(name,allPieces){
     this.name = name;
     this.allPieces = allPieces;
+    console.log('ai all pices',allPieces)
 }
 
 AI.prototype.play = function(pieces,selectedLines){

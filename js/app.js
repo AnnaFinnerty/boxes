@@ -1,6 +1,6 @@
 class App{
     constructor(){
-        this.isPlayerOneHuman = true;
+        this.isPlayerOneHuman = false;
         this.isPlayerTwoHuman = false;
         this.isRandom = true;
         this.playerOneColor = "firebrick";
@@ -13,9 +13,8 @@ class App{
         this.playerOneGamesontainer = document.querySelector('#player-one-games');
         this.playerTwoGamesontainer = document.querySelector('#player-two-games');
         this.modalWindow = document.querySelector('#modal-window');
-
+        this.openModal('settings');
         this.newGame();
-        this.openModal('message','test message')
     }
     gameWon = (isPlayerOneVictortious) => {
         console.log("game over!");
@@ -26,6 +25,7 @@ class App{
             this.playerTwoGamesWon++;
             this.playerTwoGamesontainer.innerHTML = "Games: " + this.playerTwoGamesWon;
         }
+        this.openModal('message','GAME OVER')
     }
     restart = () => {
         console.log('restarting');
@@ -36,13 +36,27 @@ class App{
     }
     openModal = (type,text) => {
         console.log('opening modal');
+        if(this.modalWindow.firstChild){
+            this.modalWindow.removeChild(this.modalWindow.firstChild)
+        }
         this.modalWindow.className = "modal-window";
-        this.modal = new Modal(this.modalWindow, this.closeModal,type,text)
+        this.modal = new Modal(this.modalWindow, this.emit,type,text)
     }
     closeModal = () => {
         this.modal = null;
         this.modalWindow.className = "hidden";
         this.modalWindow.removeChild(this.modalWindow.firstChild)
+    }
+    emit = (event) => {
+        switch(event){
+            case "close":
+                this.closeModal();
+            break
+
+            case "new":
+                this.newGame();
+            break
+        }
     }
 }
 

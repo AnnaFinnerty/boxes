@@ -4,6 +4,7 @@ class Game{
         this.playerTwoColor = playerTwoColor;
         this.isPlayerOneHuman = isPlayerOneHuman;
         this.isPlayerTwoHuman = isPlayerTwoHuman;
+        this.aiDelay = 500;
         this.gameWon = gameWon;
         this.playerOneScore = 0;
         this.playerTwoScore = 0;
@@ -187,6 +188,7 @@ class Game{
         this.message.innerHTML = this.playerOneGoesNext ? "Player One's Turn" : "Player Two's Turn";
     }
     selectAI = () => {
+        
         let move = null
         if(this.playerOneGoesNext){
             move = this.playerOne.playRandom(this.selectedLines);
@@ -198,8 +200,12 @@ class Game{
         const y =  move.split(",")[1];
         console.log('lines',this.lines)
         console.log('move',move )
-        console.log('target',target)
-        this.selectLine(x,y,target);
+        console.log('target',target);
+        
+        setTimeout(()=>{
+            this.selectLine(x,y,target);
+        },this.aiDelay)
+        
     }
     checkForAI = () => {
         if(!this.playerOneGoesNext && !this.isPlayerTwoHuman){

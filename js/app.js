@@ -23,10 +23,8 @@ class App{
     }
     restart = () => {
         console.log('restarting');
+        this.newGame();
     }
-    // awake = () => {
-        
-    // }
     newGame = () => {
         this.game = new Game(this.playerOneColor,this.playerTwoColor, this.gameWon, this.isPlayerOneHuman, this.isPlayerTwoHuman,this.isRandom);
     }

@@ -12,7 +12,6 @@ class Game{
         this.playerOneGoesNext = true;
         this.unclaimedSquares = null;
         this.pieces = {};
-        this.lines = {};
         this.selectedLines = [];
         this.piecesAcross = 4;
         this.container = document.querySelector('#game-container');
@@ -25,12 +24,11 @@ class Game{
         this.playerOneColorBlock = document.querySelector('#player-one-color-block');
         this.playerTwoColorBlock = document.querySelector('#player-two-color-block');
         this.fills = {};
+        this.lines = {};
         this.new(isPlayerOneHuman,isPlayerTwoHuman,isRandom);
     }
     new = (isPlayerOneHuman,isPlayerTwoHuman,isRandom) => {
         console.log('new game')
-        this.playerOne = isPlayerOneHuman ? null : new ai("Player One");
-        this.playerTwo = isPlayerTwoHuman ? null : new ai("Player Two");
         this.unclaimedSquares = this.piecesAcross * this.piecesAcross;
         this.message.innerHTML = "Player One's Turn";
         this.currentPlayerColorBlock.style.background = this.playerOneColor;
@@ -52,6 +50,9 @@ class Game{
                 pieces[name]['edges'].push((i+","+(j*2+1)));//left
             }
         }
+        const allPieces = Object.keys(pieces);
+        this.playerOne = isPlayerOneHuman ? null : new AI("Player One",allPieces);
+        this.playerTwo = isPlayerTwoHuman ? null : new AI("Player Two",allPieces);
         console.log(pieces);
         this.pieces = pieces;
         this.buildBoard();
@@ -72,9 +73,10 @@ class Game{
                         dash.className = 'dash horizontal-dash';
                         dash.setAttribute('data-x',j);
                         dash.setAttribute('data-y',i);
-                        dash.addEventListener('click',this.selectLine);
+                        dash.addEventListener('click',this.clickLine);
                         // dash.innerHTML=j+","+i;
                         row.appendChild(dash);
+                        this.lines[j+"_"+i] = dash;
                     }
                 }
             } else {
@@ -84,9 +86,10 @@ class Game{
                     dash.className = 'dash vertical-dash';
                     dash.setAttribute('data-x',j);
                     dash.setAttribute('data-y',i);
-                    dash.addEventListener('click',this.selectLine);
+                    dash.addEventListener('click',this.clickLine);
                     // dash.innerHTML=j+","+i;
                     row.appendChild(dash);
+                    this.lines[j+"_"+i] = dash;
                     if(j<this.piecesAcross){
                         const fill = document.createElement('div');
                         fill.className = 'fill';
@@ -101,17 +104,20 @@ class Game{
             this.container.appendChild(row);
         }
     }
-    selectLine = (e) => {
+    clickLine = (e) => {
+        const x = e.target.getAttribute('data-x');
+        const y = e.target.getAttribute('data-y');
+        this.selectLine(x,y,e.target)
+    }
+    selectLine = (x,y,target) => {
+        console.log('selecting line ' + x + "," + y );
         if(this.playerOneGoesNext){
             this.playerOneMoves++
         } else {
             this.playerTwoMoves++
         }
-        const x = e.target.getAttribute('data-x');
-        const y = e.target.getAttribute('data-y');
-        console.log('selecting line ' + x + "," + y );
-        const c = e.target.className.split(' ')[1];
-        e.target.className = c + " selected";
+        const c = target.className.split(' ')[1];
+        target.className = c + " selected";
         this.selectedLines.push(x+","+y);
         this.checkForSquare(x,y);
     }
@@ -158,13 +164,28 @@ class Game{
     nextTurn = () => {
         this.playerOneGoesNext = !this.playerOneGoesNext;
         if(this.playerOneGoesNext && !this.isPlayerOneHuman){
-            this.playerOne.play(this.pieces,this.selectedLines);
+            this.selectAI();
         }
         if(!this.playerOneGoesNext && !this.isPlayerTwoHuman){
-            this.playerTwo.play(this.pieces,this.selectedLines);
+            this.selectAI();
         }
         this.currentPlayerColorBlock.style.background = this.playerOneGoesNext ? this.playerOneColor : this.playerTwoColor;
         this.message.innerHTML = this.playerOneGoesNext ? "Player One's Turn" : "Player Two's Turn";
+    }
+    selectAI = () => {
+        let move = null
+        if(this.playerOneGoesNext){
+            move = this.playerOne.playRandom(this.pieces,this.selectedLines);
+        } else {
+            move = this.playerTwo.playRandom(this.pieces,this.selectedLines);
+        }
+        const target = this.lines[move];
+        const x = move.split("_")[0];
+        const y =  move.split("_")[1];
+        console.log('lines',this.lines)
+        console.log('move',move )
+        console.log('target',target)
+        this.selectLine(x,y,target);
     }
     gameOver = () => {
         this.gameWon(this.playerOneGoesNext);

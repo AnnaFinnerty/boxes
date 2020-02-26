@@ -4,6 +4,7 @@ class Game{
         this.playerTwoColor = playerTwoColor;
         this.isPlayerOneHuman = isPlayerOneHuman;
         this.isPlayerTwoHuman = isPlayerTwoHuman;
+        this.aiDelay = 500;
         this.gameWon = gameWon;
         this.playerOneScore = 0;
         this.playerTwoScore = 0;
@@ -12,7 +13,6 @@ class Game{
         this.playerOneGoesNext = true;
         this.unclaimedSquares = null;
         this.pieces = {};
-        this.lines = {};
         this.selectedLines = [];
         this.piecesAcross = 4;
         this.container = document.querySelector('#game-container');
@@ -25,12 +25,11 @@ class Game{
         this.playerOneColorBlock = document.querySelector('#player-one-color-block');
         this.playerTwoColorBlock = document.querySelector('#player-two-color-block');
         this.fills = {};
+        this.lines = {};
         this.new(isPlayerOneHuman,isPlayerTwoHuman,isRandom);
     }
     new = (isPlayerOneHuman,isPlayerTwoHuman,isRandom) => {
         console.log('new game')
-        this.playerOne = isPlayerOneHuman ? null : new ai("Player One");
-        this.playerTwo = isPlayerTwoHuman ? null : new ai("Player Two");
         this.unclaimedSquares = this.piecesAcross * this.piecesAcross;
         this.message.innerHTML = "Player One's Turn";
         this.currentPlayerColorBlock.style.background = this.playerOneColor;
@@ -38,10 +37,11 @@ class Game{
         this.playerTwoColorBlock.style.background = this.playerTwoColor;
         //build game pieces
         const pieces = {}
+        const allEdges = [];
         for(let i = 0; i < this.piecesAcross; i++){
             for(let j = 0; j < this.piecesAcross; j++){
                 //create virtual "pieces" and 
-                const name = i+"_"+j;
+                const name = i+","+j;
                 pieces[name] = {};
                 pieces[name]['won'] = false;
                 pieces[name]['sides'] = 0;
@@ -50,8 +50,14 @@ class Game{
                 pieces[name]['edges'].push((i+1)+","+((j*2)+1));//right
                 pieces[name]['edges'].push(i+","+((j*2)+2));//bottom side
                 pieces[name]['edges'].push((i+","+(j*2+1)));//left
+                allEdges.push(i+","+(j*2));//top side
+                allEdges.push((i+1)+","+((j*2)+1));//right
+                allEdges.push(i+","+((j*2)+2));//bottom side
+                allEdges.push((i+","+(j*2+1)));//left
             }
         }
+        this.playerOne = isPlayerOneHuman ? null : new AI("Player One",allEdges,this.piecesAcross);
+        this.playerTwo = isPlayerTwoHuman ? null : new AI("Player Two",allEdges,this.piecesAcross);
         console.log(pieces);
         this.pieces = pieces;
         this.buildBoard();
@@ -72,9 +78,10 @@ class Game{
                         dash.className = 'dash horizontal-dash';
                         dash.setAttribute('data-x',j);
                         dash.setAttribute('data-y',i);
-                        dash.addEventListener('click',this.selectLine);
+                        dash.addEventListener('click',this.clickLine);
                         // dash.innerHTML=j+","+i;
                         row.appendChild(dash);
+                        this.lines[j+","+i] = dash;
                     }
                 }
             } else {
@@ -84,13 +91,14 @@ class Game{
                     dash.className = 'dash vertical-dash';
                     dash.setAttribute('data-x',j);
                     dash.setAttribute('data-y',i);
-                    dash.addEventListener('click',this.selectLine);
+                    dash.addEventListener('click',this.clickLine);
                     // dash.innerHTML=j+","+i;
                     row.appendChild(dash);
+                    this.lines[j+","+i] = dash;
                     if(j<this.piecesAcross){
                         const fill = document.createElement('div');
                         fill.className = 'fill';
-                        const fillId = (j+"_"+(i-1)/2);
+                        const fillId = (j+","+(i-1)/2);
                         fill.id = fillId;
                         // fill.innerHTML = fillId;
                         this.fills[fillId] = fill;
@@ -100,18 +108,24 @@ class Game{
             }
             this.container.appendChild(row);
         }
+        if(!this.isPlayerOneHuman){
+            this.selectAI();
+        }
     }
-    selectLine = (e) => {
+    clickLine = (e) => {
+        const x = e.target.getAttribute('data-x');
+        const y = e.target.getAttribute('data-y');
+        this.selectLine(x,y,e.target)
+    }
+    selectLine = (x,y,target) => {
+        console.log('selecting line ' + x + "," + y );
         if(this.playerOneGoesNext){
             this.playerOneMoves++
         } else {
             this.playerTwoMoves++
         }
-        const x = e.target.getAttribute('data-x');
-        const y = e.target.getAttribute('data-y');
-        console.log('selecting line ' + x + "," + y );
-        const c = e.target.className.split(' ')[1];
-        e.target.className = c + " selected";
+        const c = target.className.split(' ')[1];
+        target.className = c + " selected";
         this.selectedLines.push(x+","+y);
         this.checkForSquare(x,y);
     }
@@ -128,17 +142,9 @@ class Game{
                         matches = testSquare(this.selectedLines,this.pieces[squaresFound[i]]);
                     }
                     if(matches ===this.pieces[squaresFound[i]]['edges'].length){
-                        console.log('its a whole square')
+                        console.log('its a whole square', squaresFound[i])
                         if(!this.pieces[squaresFound[i]]['won']){
-                            this.pieces[squaresFound[i]]['won'] = !this.playerOneGoesNext ? "PlayerTwo":"PlayerOne";
-                            this.fills[squaresFound[i]].style.background = !this.playerOneGoesNext ? this.playerTwoColor: this.playerOneColor;
-                            if(!this.playerOneGoesNext){
-                                this.playerTwoScore++
-                            } else {
-                                this.playerOneScore++
-                            }
-                            this.unclaimedSquares--;
-                            console.log('remaining squares',this.unclaimedSquares)
+                            this.fillSquare(squaresFound[i])
                             squareFound = true;
                         }
                     } 
@@ -151,20 +157,64 @@ class Game{
         } else {
             if(this.unclaimedSquares <= 0){
                 this.message.innerHTML = "GAME OVER"
-                this.gameOver();            
-            } 
+                this.gameOver();           
+            } else {
+                const AICheck = this.checkForAI();
+                            if(AICheck){
+                                this.selectAI();
+                            }
+            }
         }
+    }
+    fillSquare = (squareId) => {
+        console.log('filling square ', squareId)
+        this.pieces[squareId]['won'] = !this.playerOneGoesNext ? "PlayerTwo":"PlayerOne";
+        this.fills[squareId].style.background = !this.playerOneGoesNext ? this.playerTwoColor: this.playerOneColor;
+        if(!this.playerOneGoesNext){
+            this.playerTwoScore++
+        } else {
+            this.playerOneScore++
+        }
+        this.unclaimedSquares--;
+        console.log('remaining squares',this.unclaimedSquares);
     }
     nextTurn = () => {
         this.playerOneGoesNext = !this.playerOneGoesNext;
-        if(this.playerOneGoesNext && !this.isPlayerOneHuman){
-            this.playerOne.play(this.pieces,this.selectedLines);
-        }
-        if(!this.playerOneGoesNext && !this.isPlayerTwoHuman){
-            this.playerTwo.play(this.pieces,this.selectedLines);
+        const AICheck = this.checkForAI();
+        if(AICheck){
+            this.selectAI();
         }
         this.currentPlayerColorBlock.style.background = this.playerOneGoesNext ? this.playerOneColor : this.playerTwoColor;
         this.message.innerHTML = this.playerOneGoesNext ? "Player One's Turn" : "Player Two's Turn";
+    }
+    selectAI = () => {
+        
+        let move = null
+        if(this.playerOneGoesNext){
+            move = this.playerOne.play(this.pieces,this.selectedLines);
+        } else {
+            move = this.playerTwo.play(this.pieces,this.selectedLines);
+        }
+        const target = this.lines[move];
+        const x = move.split(",")[0];
+        const y =  move.split(",")[1];
+        // console.log('lines',this.lines)
+        // console.log('move',move )
+        // console.log('target',target);
+        
+        setTimeout(()=>{
+            this.selectLine(x,y,target);
+        },this.aiDelay)
+        
+    }
+    checkForAI = () => {
+        if(!this.playerOneGoesNext && !this.isPlayerTwoHuman){
+            return true
+        }
+        if(this.playerOneGoesNext && !this.isPlayerOneHuman){
+            return true
+        }
+        return false
     }
     gameOver = () => {
         this.gameWon(this.playerOneGoesNext);

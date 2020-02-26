@@ -189,10 +189,10 @@ h1{
         font-size: 80%;
     }
     header{
-        height: 15vh;
+        height: 17.5vh;
     }
     h1{
-        margin: 0 10vw 0 2vw;
+        margin: 0 5vw 0 2vw;
     }
     h2{
         font-size: 90%;
@@ -203,10 +203,12 @@ h1{
         flex-wrap: nowrap;
     }
     .player-score{
-        height: 6vh;
+        height: 7vh;
+        width: 33vw;
+        margin: 2px;
     }
     #message-container{
-        top: 16vh;
+        top: 18vh;
     }
     #game-container{
         padding-top: 5vh;

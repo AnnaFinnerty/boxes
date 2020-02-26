@@ -37,9 +37,15 @@ h1,h2,a{
 }
 
 h1{
-    margin: 0 20vw 0 2vw;
+    margin: 0 30vw 0 2vw;
     font-size: 8vh;
     line-height: 10vh;
+}
+
+.score-container{
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
 }
 
 .player-score{
@@ -47,7 +53,7 @@ h1{
     border: .5px solid white;
     margin: 1vh;
     padding: .5vh;
-    width: 30vw;
+    width: 20vw;
     justify-content: space-evenly;
 }
 
@@ -178,4 +184,32 @@ h1{
     display: none;
 }
 
+@media only screen and (max-width: 600px) {
+    body{
+        font-size: 80%;
+    }
+    header{
+        height: 15vh;
+    }
+    h1{
+        margin: 0 10vw 0 2vw;
+    }
+    h2{
+        font-size: 90%;
+    }
+    .score-container{
+        display: flex;
+        flex-direction: column;
+        flex-wrap: nowrap;
+    }
+    .player-score{
+        height: 6vh;
+    }
+    #message-container{
+        top: 16vh;
+    }
+    #game-container{
+        padding-top: 5vh;
+    }
+  }
 

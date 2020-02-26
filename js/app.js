@@ -1,6 +1,6 @@
 class App{
     constructor(){
-        this.isPlayerOneHuman = false;
+        this.isPlayerOneHuman = true;
         this.isPlayerTwoHuman = false;
         this.isRandom = true;
         this.playerOneColor = "firebrick";
@@ -13,7 +13,7 @@ class App{
         this.playerOneGamesontainer = document.querySelector('#player-one-games');
         this.playerTwoGamesontainer = document.querySelector('#player-two-games');
         this.modalWindow = document.querySelector('#modal-window');
-        this.openModal('settings');
+        // this.openModal('settings');
         this.newGame();
     }
     gameWon = (isPlayerOneVictortious) => {
@@ -25,7 +25,7 @@ class App{
             this.playerTwoGamesWon++;
             this.playerTwoGamesontainer.innerHTML = "Games: " + this.playerTwoGamesWon;
         }
-        this.openModal('message','GAME OVER')
+        this.openModal('over')
     }
     restart = () => {
         console.log('restarting');

@@ -56,8 +56,8 @@ class Game{
                 allEdges.push((i+","+(j*2+1)));//left
             }
         }
-        this.playerOne = isPlayerOneHuman ? null : new AI("Player One",allEdges);
-        this.playerTwo = isPlayerTwoHuman ? null : new AI("Player Two",allEdges);
+        this.playerOne = isPlayerOneHuman ? null : new AI("Player One",allEdges,this.piecesAcross);
+        this.playerTwo = isPlayerTwoHuman ? null : new AI("Player Two",allEdges,this.piecesAcross);
         console.log(pieces);
         this.pieces = pieces;
         this.buildBoard();
@@ -191,16 +191,16 @@ class Game{
         
         let move = null
         if(this.playerOneGoesNext){
-            move = this.playerOne.playRandom(this.selectedLines);
+            move = this.playerOne.play(this.pieces,this.selectedLines);
         } else {
-            move = this.playerTwo.playRandom(this.selectedLines);
+            move = this.playerTwo.play(this.pieces,this.selectedLines);
         }
         const target = this.lines[move];
         const x = move.split(",")[0];
         const y =  move.split(",")[1];
-        console.log('lines',this.lines)
-        console.log('move',move )
-        console.log('target',target);
+        // console.log('lines',this.lines)
+        // console.log('move',move )
+        // console.log('target',target);
         
         setTimeout(()=>{
             this.selectLine(x,y,target);

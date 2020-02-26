@@ -12,8 +12,9 @@ class Modal{
         row1.className = "row";
         const close = document.createElement('button');
 
-        close.className = 'close-modal-button';
-        close.textContent = "x"
+        close.className = 'close-modal-button far fa-window-close';
+        // <i class="far fa-window-close"></i>
+        // close.textContent = "x"
         close.addEventListener('click',()=>this.callback('close'));
         row1.appendChild(close);
         modal.appendChild(row1);
@@ -29,7 +30,21 @@ class Modal{
     }
     getContent = (type) => {
         const content = document.createElement('div');
-        content.innerHTML = "CONTENT";
+        
+        switch(type){
+            case "over":
+                const span = document.createElement('span');
+                span.textContent = "GAME OVER";
+                content.appendChild(span);
+                
+                const button = document.createElement('span');
+                button.textContent = "NEW";
+                button.addEventListener('click',()=>this.callback('new'))
+                content.appendChild(button);
+            break
+
+        }
+        
         return content
     }
 }

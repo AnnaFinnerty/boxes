@@ -13,6 +13,10 @@ class App{
         this.playerOneGamesontainer = document.querySelector('#player-one-games');
         this.playerTwoGamesontainer = document.querySelector('#player-two-games');
         this.modalWindow = document.querySelector('#modal-window');
+        this.container = document.querySelector('#game-container');
+
+        document.querySelector('#new-button').addEventListener('click',()=>this.newGame())
+
         // this.openModal('settings');
         this.newGame();
     }
@@ -32,6 +36,9 @@ class App{
         this.newGame();
     }
     newGame = () => {
+        while(this.container.firstChild){
+            this.container.removeChild(this.container.firstChild)
+        }
         this.game = new Game(this.playerOneColor,this.playerTwoColor, this.gameWon, this.isPlayerOneHuman, this.isPlayerTwoHuman,this.isRandom);
     }
     openModal = (type,text) => {

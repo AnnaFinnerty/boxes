@@ -6,6 +6,7 @@ body{
     overflow: hidden;
     background: rgb(240,240,240);
     font-family: sans-serif;
+    font-size: 95%;
 }
 
 header{
@@ -37,15 +38,16 @@ h1,h2,a{
 }
 
 h1{
-    margin: 0 30vw 0 2vw;
     font-size: 8vh;
     line-height: 10vh;
+    margin: 1vh 20vh 0vh 1vh;
 }
 
 .score-container{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
+    float: right;
 }
 
 .player-score{
@@ -58,7 +60,7 @@ h1{
 }
 
 #game-container{
-    margin: 0 auto;
+    margin: 2vh auto;
     padding-top: 10vh;
 }
 
@@ -75,6 +77,14 @@ h1{
     width: 30vw;
     display: flex;
     justify-content: center;
+}
+
+#new-button{
+    width: 10vw;
+    margin: 0 auto;
+    font-family: 'Aldrich', sans-serif;
+    padding: 1vh;
+    background: white;
 }
 
 .color-block{

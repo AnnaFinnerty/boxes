@@ -20,7 +20,7 @@ AI.prototype.setup = function(){
 
 AI.prototype.play = function(pieces,selectedLines){
     console.log(this.name + "'s turn")
-    if(this.selectedLines.length < 5){
+    if(selectedLines.length < 5){
         return this.playRandom(selectedLines); 
     }
     const emptyHeatmap = this.setup();

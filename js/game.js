@@ -1,19 +1,3 @@
-class Edge{
-    constructor(x,y){
-        this.x = x;
-        this.y = y;
-        this.selected = false;
-        this.selectedBy = null;
-        this.selectedOnTurn = null;
-    }
-    select(selectedBy, turn){
-        this.selected = true;
-        this.selectedBy = selectedBy;
-        this.selectedOnTurn = turn;
-    }
-}
-
-
 class Game{
     constructor(playerOneColor,playerTwoColor,gameWon,isPlayerOneHuman,isPlayerTwoHuman,isRandom){
         this.playerOneColor = playerOneColor;
@@ -151,7 +135,13 @@ class Game{
         let squareFound = false;
         if(this.selectedLines.length > 3){         
             const pieces = Object.keys(this.pieces);
-            const squaresFound = pieces.filter((piece)=> this.pieces[piece]['edges'].includes(x+","+y) && !this.pieces[piece]['won'])          
+            const squaresFound = pieces.filter((piece)=> {
+                    
+                    return(
+                        this.pieces[piece]['edges'].includes(x+","+y) && !this.pieces[piece]['won']
+                    )
+                }
+            )          
             if(squaresFound.length){
                 for(let i = 0; i < squaresFound.length; i++){
                     let matches = 0;

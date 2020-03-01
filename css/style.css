@@ -40,23 +40,25 @@ h1,h2,a{
 h1{
     font-size: 8vh;
     line-height: 10vh;
-    margin: 1vh 20vh 0vh 1vh;
+    margin: 1vh 0vh 0vh 1vh;
 }
 
 .score-container{
     display: flex;
     flex-direction: row;
     flex-wrap: nowrap;
-    float: right;
+    justify-content: right;
+    width: 60vw;
 }
 
 .player-score{
     display: flex;
     border: .5px solid white;
-    margin: 1vh;
-    padding: .5vh;
-    width: 20vw;
-    justify-content: space-evenly;
+    max-width: 30vw;
+    margin: auto 1vw;
+    padding: .1vh 2vw;
+    justify-content: space-around;
+    float: right;
 }
 
 #game-container{

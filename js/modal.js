@@ -4,7 +4,7 @@ class Modal{
         this.callback = callback;
         this.buildModal(type,text)
     }
-    buildModal = (type,text) => {
+    buildModal(type,text){
         console.log('building modal');
         const modal = document.createElement('div');
         modal.className = type === "message" ? type : "panel";
@@ -28,7 +28,7 @@ class Modal{
         }
         this.window.appendChild(modal);
     }
-    getContent = (type) => {
+    getContent(type){
         const content = document.createElement('div');
         
         switch(type){

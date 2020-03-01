@@ -20,7 +20,7 @@ class App{
         // this.openModal('settings');
         this.newGame();
     }
-    gameWon = (isPlayerOneVictortious) => {
+    gameWon(isPlayerOneVictortious){
         console.log("game over!");
         if(isPlayerOneVictortious){
             this.playerOneGamesWon++
@@ -31,17 +31,17 @@ class App{
         }
         this.openModal('over')
     }
-    restart = () => {
+    restart(){
         console.log('restarting');
         this.newGame();
     }
-    newGame = () => {
+    newGame(){
         while(this.container.firstChild){
-            this.container.removeChild(this.container.firstChild)
+            this.container.removeChild(this.container.firstChildN)
         }
         this.game = new Game(this.playerOneColor,this.playerTwoColor, this.gameWon, this.isPlayerOneHuman, this.isPlayerTwoHuman,this.isRandom);
     }
-    openModal = (type,text) => {
+    openModal(type,text){
         console.log('opening modal');
         if(this.modalWindow.firstChild){
             this.modalWindow.removeChild(this.modalWindow.firstChild)
@@ -49,12 +49,12 @@ class App{
         this.modalWindow.className = "modal-window";
         this.modal = new Modal(this.modalWindow, this.emit,type,text)
     }
-    closeModal = () => {
+    closeModal(){
         this.modal = null;
         this.modalWindow.className = "hidden";
         this.modalWindow.removeChild(this.modalWindow.firstChild)
     }
-    emit = (event) => {
+    emit(event){
         switch(event){
             case "close":
                 this.closeModal();

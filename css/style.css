@@ -165,7 +165,7 @@ h1{
 
 .message{
     margin: 0 auto;
-    max-width: 40vw;
+    width: 40vw;
     padding: 1vh 10vh 3vh 10vh;
     background: rgb(240,240,240);
 }

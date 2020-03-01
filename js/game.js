@@ -26,15 +26,15 @@ class Game{
         this.playerTwoColorBlock = document.querySelector('#player-two-color-block');
         this.fills = {};
         this.lines = {};
-        this.new(isPlayerOneHuman,isPlayerTwoHuman,isRandom);
+        this.newGame(isPlayerOneHuman,isPlayerTwoHuman,isRandom);
     }
-    new = (isPlayerOneHuman,isPlayerTwoHuman,isRandom) => {
+    newGame(isPlayerOneHuman,isPlayerTwoHuman,isRandom){
         console.log('new game')
         this.unclaimedSquares = this.piecesAcross * this.piecesAcross;
         this.message.innerHTML = "Player One's Turn";
-        this.currentPlayerColorBlock.style.background = this.playerOneColor;
-        this.playerOneColorBlock.style.background = this.playerOneColor;
-        this.playerTwoColorBlock.style.background = this.playerTwoColor;
+        this.currentPlayerColorBlock.style.backgroundColor = this.playerOneColor;
+        this.playerOneColorBlock.style.backgroundColor = this.playerOneColor;
+        this.playerTwoColorBlock.style.backgroundColor = this.playerTwoColor;
         //build game pieces
         const pieces = {}
         const allEdges = [];
@@ -62,7 +62,7 @@ class Game{
         this.pieces = pieces;
         this.buildBoard();
     }
-    buildBoard = () => {
+    buildBoard(){
         const pieces = Object.keys(this.pieces);
         for(let i = 0; i < this.piecesAcross*2+1; i++){
             const row = document.createElement('div');
@@ -112,12 +112,12 @@ class Game{
             this.selectAI();
         }
     }
-    clickLine = (e) => {
+    clickLine(e){
         const x = e.target.getAttribute('data-x');
         const y = e.target.getAttribute('data-y');
         this.selectLine(x,y,e.target)
     }
-    selectLine = (x,y,target) => {
+    selectLine(x,y,target){
         console.log('selecting line ' + x + "," + y );
         if(this.playerOneGoesNext){
             this.playerOneMoves++
@@ -129,7 +129,7 @@ class Game{
         this.selectedLines.push(x+","+y);
         this.checkForSquare(x,y);
     }
-    checkForSquare = (x,y) => {
+    checkForSquare(x,y){
         console.log('checking for square');
         let squareFound = false;
         if(this.selectedLines.length > 3){         
@@ -166,7 +166,7 @@ class Game{
             }
         }
     }
-    fillSquare = (squareId) => {
+    fillSquare(squareId){
         console.log('filling square ', squareId)
         this.pieces[squareId]['won'] = !this.playerOneGoesNext ? "PlayerTwo":"PlayerOne";
         this.fills[squareId].style.background = !this.playerOneGoesNext ? this.playerTwoColor: this.playerOneColor;
@@ -178,7 +178,7 @@ class Game{
         this.unclaimedSquares--;
         console.log('remaining squares',this.unclaimedSquares);
     }
-    nextTurn = () => {
+    nextTurn(){
         this.playerOneGoesNext = !this.playerOneGoesNext;
         const AICheck = this.checkForAI();
         if(AICheck){
@@ -187,7 +187,7 @@ class Game{
         this.currentPlayerColorBlock.style.background = this.playerOneGoesNext ? this.playerOneColor : this.playerTwoColor;
         this.message.innerHTML = this.playerOneGoesNext ? "Player One's Turn" : "Player Two's Turn";
     }
-    selectAI = () => {
+    selectAI(){
         
         let move = null
         if(this.playerOneGoesNext){
@@ -207,7 +207,7 @@ class Game{
         },this.aiDelay)
         
     }
-    checkForAI = () => {
+    checkForAI(){
         if(!this.playerOneGoesNext && !this.isPlayerTwoHuman){
             return true
         }
@@ -216,10 +216,10 @@ class Game{
         }
         return false
     }
-    gameOver = () => {
+    gameOver(){
         this.gameWon(this.playerOneGoesNext);
     }
-    updateScore = () => {
+    updateScore(){
         this.playerOneScoreContainer.innerHTML = 'Score: ' + this.playerOneScore;
         this.playerOneMovesContainer.innerHTML = 'Moves: ' + this.playerOneMoves;
         this.playerTwoScoreContainer.innerHTML = 'Score: ' + this.playerTwoScore;

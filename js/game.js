@@ -26,6 +26,7 @@ class Game{
         this.playerTwoColorBlock = document.querySelector('#player-two-color-block');
         this.fills = {};
         this.lines = {};
+        this.clickLine = this.clickLine.bind(this);
         this.newGame(isPlayerOneHuman,isPlayerTwoHuman,isRandom);
     }
     newGame(isPlayerOneHuman,isPlayerTwoHuman,isRandom){

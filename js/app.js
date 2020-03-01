@@ -37,7 +37,7 @@ class App{
     }
     newGame(){
         while(this.container.firstChild){
-            this.container.removeChild(this.container.firstChildN)
+            this.container.removeChild(this.container.firstChild)
         }
         this.game = new Game(this.playerOneColor,this.playerTwoColor, this.gameWon, this.isPlayerOneHuman, this.isPlayerTwoHuman,this.isRandom);
     }
